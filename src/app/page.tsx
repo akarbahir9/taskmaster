@@ -59,7 +59,7 @@ export default function HomePage() {
   };
 
   const filteredTasks = useMemo(() => {
-    if (!isMounted) return []; // Prevent computations until client-side mounted
+    if (!isMounted) return []; 
     switch (filter) {
       case "active":
         return tasks.filter((task) => !task.completed);
@@ -74,9 +74,8 @@ export default function HomePage() {
   const completedTasksCount = useMemo(() => tasks.filter(task => task.completed).length, [tasks]);
 
   if (!isMounted) {
-    // Optional: render a loading state or null until mounted to avoid hydration issues
     return (
-      <main className="flex min-h-screen flex-col items-center justify-start p-4 sm:p-8 lg:p-12 bg-background font-body">
+      <div className="flex flex-col items-center justify-start p-4 sm:p-8 lg:p-12 font-body">
         <div className="w-full max-w-2xl">
           <Card className="shadow-xl rounded-lg">
             <CardHeader className="text-center pb-4">
@@ -85,12 +84,12 @@ export default function HomePage() {
             </CardHeader>
           </Card>
         </div>
-      </main>
+      </div>
     );
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-start p-4 sm:p-8 lg:p-12 bg-background font-body">
+    <div className="flex flex-col items-center justify-start p-4 sm:p-8 lg:p-12">
       <div className="w-full max-w-2xl">
         <Card className="shadow-xl rounded-lg overflow-hidden">
           <CardHeader className="text-center pb-4">
@@ -127,6 +126,6 @@ export default function HomePage() {
           </CardFooter>
         </Card>
       </div>
-    </main>
+    </div>
   );
 }
