@@ -1,12 +1,30 @@
-import type {Metadata} from 'next';
-import './globals.css';
-import { Toaster } from "@/components/ui/toaster";
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
-import { ThemeToggle } from "@/components/theme-toggle";
+import { Navigation } from "@/components/navigation";
+
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'TaskMaster',
-  description: 'Organize your day, one task at a time.',
+  title: "ScriptSpark - AI-Powered Movie Script Generator",
+  description: "Transform your movie ideas into professional screenplays with the power of AI. Create compelling stories with rich characters and industry-standard formatting.",
+  keywords: ["screenplay", "script writing", "AI", "movie script", "screenwriting", "film"],
+  authors: [{ name: "ScriptSpark Team" }],
+  creator: "ScriptSpark",
+  publisher: "ScriptSpark",
+  robots: "index, follow",
+  openGraph: {
+    title: "ScriptSpark - AI-Powered Movie Script Generator",
+    description: "Transform your movie ideas into professional screenplays with the power of AI.",
+    type: "website",
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "ScriptSpark - AI-Powered Movie Script Generator",
+    description: "Transform your movie ideas into professional screenplays with the power of AI.",
+  },
 };
 
 export default function RootLayout({
@@ -16,27 +34,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet" />
-      </head>
-      <body className="min-h-screen bg-background font-body antialiased">
+      <body className={inter.className}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
           enableSystem
           disableTransitionOnChange
         >
-          <div className="relative flex min-h-screen flex-col">
-            <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-              <div className="flex h-14 items-center justify-end px-6">
-                <ThemeToggle />
-              </div>
-            </header>
-            <main className="flex-1">{children}</main>
-          </div>
-          <Toaster />
+          <Navigation />
+          <main>{children}</main>
         </ThemeProvider>
       </body>
     </html>

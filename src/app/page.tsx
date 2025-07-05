@@ -1,131 +1,185 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
-import type { Task, FilterType } from "@/types";
-import { AddTaskForm } from "@/components/add-task-form";
-import { TaskItem } from "@/components/task-item";
-import { TaskFilters } from "@/components/task-filters";
+import { useState } from "react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Separator } from "@/components/ui/separator";
+import { Badge } from "@/components/ui/badge";
+import { Film, Sparkles, BookOpen, Users, Download, Edit3 } from "lucide-react";
 
 export default function HomePage() {
-  const [tasks, setTasks] = useState<Task[]>(() => {
-    if (typeof window !== 'undefined') {
-      const savedTasks = localStorage.getItem("tasks");
-      return savedTasks ? JSON.parse(savedTasks) : [];
+  const [isLoading, setIsLoading] = useState(false);
+
+  const features = [
+    {
+      icon: <Sparkles className="w-6 h-6" />,
+      title: "AI-Powered Generation",
+      description: "Advanced AI creates compelling, professionally formatted screenplays from your ideas."
+    },
+    {
+      icon: <BookOpen className="w-6 h-6" />,
+      title: "Industry Standard Format",
+      description: "Scripts follow professional screenplay formatting with proper scene headings and dialogue."
+    },
+    {
+      icon: <Users className="w-6 h-6" />,
+      title: "Rich Character Development",
+      description: "Create detailed character profiles with motivations, arcs, and personality traits."
+    },
+    {
+      icon: <Edit3 className="w-6 h-6" />,
+      title: "Interactive Editor",
+      description: "Edit and refine your generated scripts with our built-in screenplay editor."
+    },
+    {
+      icon: <Download className="w-6 h-6" />,
+      title: "Multiple Export Formats",
+      description: "Download your scripts in PDF, Final Draft, or plain text formats."
+    },
+    {
+      icon: <Film className="w-6 h-6" />,
+      title: "Genre Flexibility",
+      description: "Create scripts in any genre or blend multiple genres for unique storytelling."
     }
-    return [];
-  });
-  const [filter, setFilter] = useState<FilterType>("all");
-  const [isMounted, setIsMounted] = useState(false);
+  ];
 
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-  
-  useEffect(() => {
-    if (isMounted) {
-      localStorage.setItem("tasks", JSON.stringify(tasks));
-    }
-  }, [tasks, isMounted]);
+  const genres = [
+    "Action", "Comedy", "Drama", "Horror", "Thriller", 
+    "Sci-Fi", "Fantasy", "Romance", "Mystery", "Western"
+  ];
 
-  const handleAddTask = (text: string) => {
-    const newTask: Task = {
-      id: crypto.randomUUID(),
-      text,
-      completed: false,
-    };
-    setTasks((prevTasks) => [newTask, ...prevTasks]);
-  };
-
-  const handleToggleComplete = (id: string) => {
-    setTasks((prevTasks) =>
-      prevTasks.map((task) =>
-        task.id === id ? { ...task, completed: !task.completed } : task
-      )
-    );
-  };
-
-  const handleDeleteTask = (id: string) => {
-    setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id));
-  };
-
-  const filteredTasks = useMemo(() => {
-    if (!isMounted) return []; 
-    switch (filter) {
-      case "active":
-        return tasks.filter((task) => !task.completed);
-      case "completed":
-        return tasks.filter((task) => task.completed);
-      default:
-        return tasks;
-    }
-  }, [tasks, filter, isMounted]);
-
-  const activeTasksCount = useMemo(() => tasks.filter(task => !task.completed).length, [tasks]);
-  const completedTasksCount = useMemo(() => tasks.filter(task => task.completed).length, [tasks]);
-
-  if (!isMounted) {
-    return (
-      <div className="flex flex-col items-center justify-start p-4 sm:p-8 lg:p-12 font-body">
-        <div className="w-full max-w-2xl">
-          <Card className="shadow-xl rounded-lg">
-            <CardHeader className="text-center pb-4">
-              <CardTitle className="text-3xl sm:text-4xl font-headline text-primary">TaskMaster</CardTitle>
-              <CardDescription className="text-sm sm:text-base">Loading tasks...</CardDescription>
-            </CardHeader>
-          </Card>
-        </div>
-      </div>
-    );
-  }
+  const tones = [
+    "Gritty", "Lighthearted", "Suspenseful", "Hopeful", 
+    "Dark", "Satirical", "Whimsical", "Serious", "Epic", "Intimate"
+  ];
 
   return (
-    <div className="flex flex-col items-center justify-start p-4 sm:p-8 lg:p-12">
-      <div className="w-full max-w-2xl">
-        <Card className="shadow-xl rounded-lg overflow-hidden">
-          <CardHeader className="text-center pb-4">
-            <CardTitle className="text-3xl sm:text-4xl font-headline text-primary">TaskMaster</CardTitle>
-            <CardDescription className="text-sm sm:text-base text-muted-foreground">
-              Organize your day, one task at a time.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-6 px-4 sm:px-6">
-            <AddTaskForm onAddTask={handleAddTask} />
-            <Separator />
-            <TaskFilters currentFilter={filter} onFilterChange={setFilter} />
-            <ScrollArea className="h-[300px] sm:h-[350px] lg:h-[400px] pr-3">
-              {filteredTasks.length > 0 ? (
-                <div className="space-y-3">
-                  {filteredTasks.map((task) => (
-                    <TaskItem
-                      key={task.id}
-                      task={task}
-                      onToggleComplete={handleToggleComplete}
-                      onDeleteTask={handleDeleteTask}
-                    />
-                  ))}
-                </div>
-              ) : (
-                <p className="text-center text-muted-foreground pt-8">
-                  {filter === "completed" ? "No completed tasks." : (filter === "active" ? "No active tasks." : "No tasks yet. Add one above!")}
-                </p>
-              )}
-            </ScrollArea>
-          </CardContent>
-          <CardFooter className="text-xs text-muted-foreground justify-center pt-4 pb-4 bg-secondary/30">
-            <p>{activeTasksCount} active | {completedTasksCount} completed | {tasks.length} total</p>
-          </CardFooter>
-        </Card>
-      </div>
+    <div className="min-h-screen bg-gradient-to-br from-background to-secondary/20">
+      {/* Hero Section */}
+      <section className="relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-secondary/10" />
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+          <div className="text-center">
+            <div className="flex items-center justify-center mb-6">
+              <Film className="w-12 h-12 text-primary mr-3" />
+              <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                ScriptSpark
+              </h1>
+            </div>
+            <p className="text-xl sm:text-2xl text-muted-foreground mb-8 max-w-3xl mx-auto">
+              Transform your movie ideas into professional screenplays with the power of AI. 
+              Create compelling stories with rich characters and industry-standard formatting.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+              <Link href="/create">
+                <Button size="lg" className="text-lg px-8 py-6 w-full sm:w-auto">
+                  <Sparkles className="w-5 h-5 mr-2" />
+                  Start Creating
+                </Button>
+              </Link>
+              <Link href="/scripts">
+                <Button size="lg" variant="outline" className="text-lg px-8 py-6 w-full sm:w-auto">
+                  <BookOpen className="w-5 h-5 mr-2" />
+                  My Scripts
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section className="py-20 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold mb-4">Why Choose ScriptSpark?</h2>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              Everything you need to bring your storytelling vision to life
+            </p>
+          </div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {features.map((feature, index) => (
+              <Card key={index} className="hover:shadow-lg transition-shadow">
+                <CardHeader>
+                  <div className="flex items-center space-x-4">
+                    <div className="p-2 bg-primary/10 rounded-lg text-primary">
+                      {feature.icon}
+                    </div>
+                    <CardTitle className="text-xl">{feature.title}</CardTitle>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <CardDescription className="text-base">
+                    {feature.description}
+                  </CardDescription>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Genres & Tones Section */}
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-secondary/10">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid lg:grid-cols-2 gap-12">
+            <div>
+              <h3 className="text-3xl font-bold mb-6">Supported Genres</h3>
+              <p className="text-muted-foreground mb-6">
+                Choose from a wide range of genres or blend them for unique storytelling
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {genres.map((genre) => (
+                  <Badge key={genre} variant="secondary" className="text-sm py-1 px-3">
+                    {genre}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+            <div>
+              <h3 className="text-3xl font-bold mb-6">Tone Options</h3>
+              <p className="text-muted-foreground mb-6">
+                Set the emotional and stylistic feel of your screenplay
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {tones.map((tone) => (
+                  <Badge key={tone} variant="outline" className="text-sm py-1 px-3">
+                    {tone}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto text-center">
+          <Card className="border-2 border-primary/20 bg-gradient-to-r from-primary/5 to-secondary/5">
+            <CardHeader className="pb-8">
+              <CardTitle className="text-3xl mb-4">Ready to Create Your Script?</CardTitle>
+              <CardDescription className="text-lg">
+                Join thousands of writers who are bringing their stories to life with ScriptSpark
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="pt-0">
+              <Link href="/create">
+                <Button size="lg" className="text-lg px-12 py-6">
+                  <Film className="w-5 h-5 mr-2" />
+                  Start Your First Script
+                </Button>
+              </Link>
+            </CardContent>
+          </Card>
+        </div>
+      </section>
     </div>
   );
 }
