@@ -15,6 +15,9 @@ import {
 } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
+import { BarChart3 } from "lucide-react";
+import Link from "next/link";
 
 export default function HomePage() {
   const [tasks, setTasks] = useState<Task[]>(() => {
@@ -93,6 +96,15 @@ export default function HomePage() {
       <div className="w-full max-w-2xl">
         <Card className="shadow-xl rounded-lg overflow-hidden">
           <CardHeader className="text-center pb-4">
+            <div className="flex justify-between items-start mb-4">
+              <div></div>
+              <Link href="/dashboard">
+                <Button variant="outline" size="sm" className="gap-2">
+                  <BarChart3 className="h-4 w-4" />
+                  Dashboard
+                </Button>
+              </Link>
+            </div>
             <CardTitle className="text-3xl sm:text-4xl font-headline text-primary">TaskMaster</CardTitle>
             <CardDescription className="text-sm sm:text-base text-muted-foreground">
               Organize your day, one task at a time.
