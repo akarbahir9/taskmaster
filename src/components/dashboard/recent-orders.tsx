@@ -1,3 +1,4 @@
+import React from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -113,12 +114,9 @@ export function RecentOrders({ className }: RecentOrdersProps) {
                 <TableCell className="font-mono text-sm">{order.id}</TableCell>
                 <TableCell className="font-medium">{order.amount}</TableCell>
                 <TableCell>
-                  <Badge 
-                    variant="secondary" 
-                    className={statusColors[order.status as keyof typeof statusColors]}
-                  >
+                  <span className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-medium ${statusColors[order.status as keyof typeof statusColors]}`}>
                     {order.status}
-                  </Badge>
+                  </span>
                 </TableCell>
                 <TableCell className="text-muted-foreground">{order.date}</TableCell>
               </TableRow>

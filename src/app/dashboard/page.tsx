@@ -1,9 +1,10 @@
+import React from "react"
 import { DashboardHeader } from "@/components/dashboard/dashboard-header"
 import { DashboardStats } from "@/components/dashboard/dashboard-stats"
-import { SalesChart } from "@/components/dashboard/sales-chart"
+import { SalesChart } from "@/components/dashboard/sales-chart-simple"
 import { RecentOrders } from "@/components/dashboard/recent-orders"
 import { InventoryOverview } from "@/components/dashboard/inventory-overview"
-import { CustomerInsights } from "@/components/dashboard/customer-insights"
+import { CustomerInsights } from "@/components/dashboard/customer-insights-simple"
 import { QuickActions } from "@/components/dashboard/quick-actions"
 
 export default function DashboardPage() {

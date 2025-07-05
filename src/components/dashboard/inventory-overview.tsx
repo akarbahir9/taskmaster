@@ -1,3 +1,4 @@
+import React from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 import { Badge } from "@/components/ui/badge"
@@ -73,12 +74,9 @@ export function InventoryOverview() {
                 ) : (
                   <TrendingDown className="h-4 w-4 text-red-500" />
                 )}
-                <Badge 
-                  variant="secondary" 
-                  className={statusColors[item.status as keyof typeof statusColors]}
-                >
+                <span className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-medium ${statusColors[item.status as keyof typeof statusColors]}`}>
                   {item.status.replace('-', ' ')}
-                </Badge>
+                </span>
               </div>
             </div>
             <div className="flex items-center justify-between text-sm text-muted-foreground">
